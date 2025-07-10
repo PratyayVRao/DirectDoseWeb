@@ -141,7 +141,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-2xl font-bold text-[#006c67] mb-4">Simple to Use</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Our intuitive interface makes calculating insulin doses quick and easy.
+                  Our intuitive interface makes calculating insulin doses fast and easy.
                 </p>
               </div>
 
