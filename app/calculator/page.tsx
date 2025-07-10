@@ -52,8 +52,8 @@ export default function MealCalculator() {
 
           if (profile) {
             setUserProfile(profile)
-            if (profile.insulin_carb_ratio) {
-              setInsulinCarbRatio(profile.insulin_carb_ratio.toString())
+            if (profile.icr) {
+              setInsulinCarbRatio(profile.icr.toString())
             }
           }
         }

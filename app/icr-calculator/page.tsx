@@ -365,7 +365,7 @@ export default function ICRCalculator() {
           const { error: profileError } = await supabase
             .from("profiles")
             .update({
-              insulin_carb_ratio: roundedFinalICR,
+              icr: roundedFinalICR,
               updated_at: new Date().toISOString(),
             })
             .eq("id", userId)

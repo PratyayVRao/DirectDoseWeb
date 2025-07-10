@@ -58,6 +58,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 relative overflow-hidden">
+
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-teal-200/30 to-emerald-200/30 rounded-full blur-3xl animate-pulse"></div>
@@ -67,7 +68,7 @@ export default function HomePage() {
 
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 py-20 text-center">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-[#e6fff9]">
           <div className="max-w-4xl mx-auto">
             {user && (
               <div className="mb-6">
@@ -76,9 +77,12 @@ export default function HomePage() {
                 </h2>
               </div>
             )}
-            <h1 className="text-5xl md:text-7xl font-bold text-[#006c67] mb-6 leading-tight">DirectDose</h1>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              <span className="text-black">Welcome to </span>
+              <span className="text-[#006c67]">DirectDose</span>
+            </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-              Changing the way the world manages insulin one dose at a time. 
+              Changing the way the world manages insulin one dose at a time.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
@@ -100,11 +104,12 @@ export default function HomePage() {
         </section>
 
         {/* Animation Section */}
-        <section className="container mx-auto px-4 py-16">
-          <div className="max-w-2xl mx-auto">
-            <GlucoseAnimation />
-          </div>
-        </section>
+        <section className="container mx-auto px-4 py-16 bg-white">
+  <div className="max-w-2xl mx-auto">
+    <GlucoseAnimation />
+  </div>
+</section>
+
 
         {/* Features Section */}
         <section className="container mx-auto px-4 py-20">
@@ -141,7 +146,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-2xl font-bold text-[#006c67] mb-4">Simple to Use</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Our intuitive interface makes calculating insulin doses fast and easy.
+                  Our intuitive interface makes calculating insulin doses quick and easy.
                 </p>
               </div>
 
