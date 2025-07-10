@@ -69,7 +69,7 @@ export default function HomePage() {
       <div className="relative z-10">
         {/* Hero Section */}
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-[#e6fff9]">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto text-center">
             {user && (
               <div className="mb-6">
                 <h2 className="text-2xl md:text-3xl font-semibold text-[#006c67] mb-2">
