@@ -133,13 +133,14 @@ const roles = [
   },
 ]
 
-const [expandedRoles, setExpandedRoles] = useState<number[]>([])
+
 
 export default function HomePage() {
   const [user, setUser] = useState<any>(null)
   const [username, setUsername] = useState<string>("")
   const [greeting, setGreeting] = useState("")
   const supabase = createClient()
+  const [expandedRoles, setExpandedRoles] = useState<number[]>([])
 
   useEffect(() => {
     const checkAuth = async () => {
