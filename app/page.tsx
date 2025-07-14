@@ -60,7 +60,10 @@ const roles = [
 const explanationRequiredRoles = ["Partnerships Lead", "Chapter Head", "Chapter Founder", "Event/Workshop Coordinator"]
 const allFieldsRequired = true
 
+
 export default function HomePage() {
+  const [showAllDetails, setShowAllDetails] = useState(false)
+  const toggleAllDescriptions = () => setShowAllDetails(!showAllDetails)
   const [user, setUser] = useState<any>(null)
   const [username, setUsername] = useState<string>("")
   const [greeting, setGreeting] = useState("")
@@ -70,9 +73,7 @@ export default function HomePage() {
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [submitted, setSubmitted] = useState(false)
- const [showAllDetails, setShowAllDetails] = useState(false)
 
-  const toggleAllDescriptions = () => setShowAllDetails(!showAllDetails)
   const supabase = createClient()
 
   useEffect(() => {
