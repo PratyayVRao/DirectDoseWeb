@@ -20,11 +20,41 @@ const encouragingMessages = [
 ]
 
 const roles = [
-  { title: "Outreach Team", description: "Help us connect with hospitals, schools, and nonprofits." },
-  { title: "Design & UX", description: "Create engaging interfaces and user flows for diabetics." },
-  { title: "Medical Research", description: "Assist in ensuring our features align with current diabetes treatment guidelines." },
-  { title: "Marketing", description: "Spread the word about DirectDose across social media and beyond." },
-  { title: "Software Development", description: "Help improve app performance and add new features." }
+  {
+    title: "Volunteer",
+    description: "Support campaigns, events, and community outreach. Low time, high impact.",
+    full: `Volunteers help power DirectDose’s mission through flexible contributions—supporting campaigns, events, and community outreach. This is the perfect role for anyone passionate about health equity and ready to take small but meaningful actions.\n\nResponsibilities:\n- Share DirectDose materials at school or in your community\n- Support outreach efforts, events, or campaigns\n- Promote our mission through social media or word-of-mouth\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Low time commitment, high community impact\n- Fulfills service hour or extracurricular leadership goals\n- Opportunity to move into higher leadership roles`
+  },
+  {
+    title: "Social Media Manager",
+    description: "Lead DirectDose’s social media with engaging, educational content.",
+    full: `You’ll lead DirectDose’s online presence by crafting content that educates and energizes. Ideal for someone who enjoys visual storytelling, advocacy, and making social media meaningful.\n\nResponsibilities:\n- Manage and grow DirectDose’s Instagram (and other platforms if needed)\n- Create and schedule informative, engaging content\n- Collaborate with other teams to promote campaigns or events\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Build a portfolio of design, content, and strategy\n- Be the voice of a youth-led health initiative\n- Gain real-world experience in nonprofit digital outreach`
+  },
+  {
+    title: "Outreach Lead",
+    description: "Expand DirectDose’s presence through clubs, schools, and drives.",
+    full: `The Outreach Lead is responsible for expanding DirectDose’s visibility across schools, clubs, and communities. You’ll run outreach campaigns and lead efforts to connect with new audiences.\n\nResponsibilities:\n- Write and send outreach emails to student clubs, schools, and organizations\n- Lead communication drives to build our supporter network\n- Coordinate with volunteers to distribute materials\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Strengthen your public speaking and persuasive writing skills\n- Play a key role in expanding a national movement\n- Collaborate closely with team leads on strategy`
+  },
+  {
+    title: "Partnerships Lead",
+    description: "Forge connections with clubs, nonprofits, and advocacy groups.",
+    full: `The Partnerships Lead identifies and manages relationships with organizations, schools, and health advocates who can help grow DirectDose’s mission and reach.\n\nResponsibilities:\n- Identify potential partner groups, clubs, or nonprofits\n- Develop and pitch partnership proposals\n- Maintain communications with partner organizations\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Gain experience in networking, collaboration, and strategy\n- Help build partnerships that create real-world impact\n- Lead meaningful connections that support diabetes education`
+  },
+  {
+    title: "Chapter Head",
+    description: "Run your school’s DirectDose team and lead local efforts.",
+    full: `Chapter Heads are local leaders who run DirectDose efforts in their school or region. You’ll manage a team, organize events, and bring our mission to your community.\n\nResponsibilities:\n- Lead your school’s or region’s DirectDose team\n- Organize at least one event or campaign per semester\n- Represent your chapter in regular communication with the national team\n- Refer at least 10 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Gain leadership experience by managing your own team\n- Represent a national nonprofit in your local community\n- Build your college application with real impact`
+  },
+  {
+    title: "Chapter Founder",
+    description: "Start a brand new chapter and lead your founding team.",
+    full: `Chapter Founders are pioneers who launch new DirectDose chapters in their schools or cities. You’ll be the first to introduce DirectDose locally, build your team, and run awareness efforts.\n\nResponsibilities:\n- Complete onboarding and training from the national team\n- Recruit 3–5 core members for your chapter\n- Organize an awareness campaign or event\n- Refer at least 10 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Be recognized as the official founder of a chapter\n- Receive leadership resources, templates, and direct support\n- Lead lasting health education change in your community`
+  },
+  {
+    title: "Event/Workshop Coordinator",
+    description: "Plan school events and public health campaigns.",
+    full: `You’ll plan and organize impactful events that raise awareness about insulin safety, affordability, and access. You’ll bring people together to learn, connect, and act.\n\nResponsibilities:\n- Organize school events, discussions, or fundraisers\n- Coordinate logistics and volunteer teams\n- Promote events with flyers, announcements, or social media\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Gain experience in planning and leading real-world events\n- Help build a more informed and supportive community\n- Take the lead in organizing public health initiatives`
+  }
 ]
 
 export default function HomePage() {
@@ -449,6 +479,8 @@ export default function HomePage() {
         </footer>
       </div>
     </div>
-    
   )
 }
+
+
+        
