@@ -18,6 +18,123 @@ const encouragingMessages = [
   "Olive your dedication to wellness!",
 ]
 
+const roles = [
+  {
+    title: "Volunteer",
+    summary:
+      "Support campaigns, events, and community outreach with flexible involvement.",
+    responsibilities: [
+      "Share DirectDose materials at school or in your community",
+      "Support outreach efforts, events, or campaigns",
+      "Promote our mission through social media or word-of-mouth",
+      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
+    ],
+    benefits: [
+      "Low time commitment, high community impact",
+      "Fulfills service hour or extracurricular leadership goals",
+      "Opportunity to move into higher leadership roles",
+    ],
+  },
+  {
+    title: "Social Media Manager",
+    summary:
+      "Craft content that educates and energizes DirectDose’s online presence.",
+    responsibilities: [
+      "Manage and grow DirectDose’s Instagram (and other platforms if needed)",
+      "Create and schedule informative, engaging content",
+      "Collaborate with other teams to promote campaigns or events",
+      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
+    ],
+    benefits: [
+      "Build a portfolio of design, content, and strategy",
+      "Be the voice of a youth-led health initiative",
+      "Gain real-world experience in nonprofit digital outreach",
+    ],
+  },
+  {
+    title: "Outreach Lead",
+    summary:
+      "Lead efforts to expand DirectDose’s visibility in schools and communities.",
+    responsibilities: [
+      "Write and send outreach emails to student clubs, schools, and organizations",
+      "Lead communication drives to build our supporter network",
+      "Coordinate with volunteers to distribute materials",
+      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
+    ],
+    benefits: [
+      "Strengthen your public speaking and persuasive writing skills",
+      "Play a key role in expanding a national movement",
+      "Collaborate closely with team leads on strategy",
+    ],
+  },
+  {
+    title: "Partnerships Lead",
+    summary:
+      "Identify and manage relationships with partner organizations and clubs.",
+    responsibilities: [
+      "Identify potential partner groups, clubs, or nonprofits",
+      "Develop and pitch partnership proposals",
+      "Maintain communications with partner organizations",
+      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
+    ],
+    benefits: [
+      "Gain experience in networking, collaboration, and strategy",
+      "Help build partnerships that create real-world impact",
+      "Lead meaningful connections that support diabetes education",
+    ],
+  },
+  {
+    title: "Chapter Head",
+    summary:
+      "Manage a DirectDose team at your school and organize regional efforts.",
+    responsibilities: [
+      "Lead your school’s or region’s DirectDose team",
+      "Organize at least one event or campaign per semester",
+      "Represent your chapter in regular communication with the national team",
+      "Refer at least 10 people to sign up at direct-dose.com and provide their email addresses to verify",
+    ],
+    benefits: [
+      "Gain leadership experience by managing your own team",
+      "Represent a national nonprofit in your local community",
+      "Build your college application with real impact",
+    ],
+  },
+  {
+    title: "Chapter Founder",
+    summary:
+      "Start a new DirectDose chapter in your school or city and lead awareness efforts.",
+    responsibilities: [
+      "Complete onboarding and training from the national team",
+      "Recruit 3–5 core members for your chapter",
+      "Organize an awareness campaign or event",
+      "Refer at least 10 people to sign up at direct-dose.com and provide their email addresses to verify",
+    ],
+    benefits: [
+      "Be recognized as the official founder of a chapter",
+      "Receive leadership resources, templates, and direct support",
+      "Lead lasting health education change in your community",
+    ],
+  },
+  {
+    title: "Event/Workshop Coordinator",
+    summary:
+      "Plan events that raise awareness about insulin safety and affordability.",
+    responsibilities: [
+      "Organize school events, discussions, or fundraisers",
+      "Coordinate logistics and volunteer teams",
+      "Promote events with flyers, announcements, or social media",
+      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
+    ],
+    benefits: [
+      "Gain experience in planning and leading real-world events",
+      "Help build a more informed and supportive community",
+      "Take the lead in organizing public health initiatives",
+    ],
+  },
+]
+
+const [expandedRoles, setExpandedRoles] = useState<number[]>([])
+
 export default function HomePage() {
   const [user, setUser] = useState<any>(null)
   const [username, setUsername] = useState<string>("")
@@ -169,6 +286,58 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+
+      {/* Join Us Section */}
+<section className="container mx-auto px-4 py-20">
+  <div className="max-w-6xl mx-auto">
+    <h2 className="text-4xl font-bold text-[#006c67] text-center mb-12">Join the Cause</h2>
+    <div className="grid md:grid-cols-2 gap-8">
+      {roles.map((role, index) => (
+        <div
+          key={index}
+          className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-2xl font-bold text-[#006c67]">{role.title}</h3>
+            <button
+              onClick={() =>
+                setExpandedRoles((prev) =>
+                  prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+                )
+              }
+              className="px-4 py-1 text-sm border border-[#006c67] text-[#006c67] rounded-full hover:bg-[#006c67] hover:text-white transition-all duration-200"
+            >
+              Role Info
+            </button>
+          </div>
+          <p className="text-gray-600 mb-2">{role.summary}</p>
+          {expandedRoles.includes(index) && (
+            <div className="mt-4 space-y-4">
+              <div>
+                <h4 className="text-lg font-semibold text-[#006c67] mb-1">Responsibilities:</h4>
+                <ul className="list-disc list-inside text-gray-600 space-y-1">
+                  {role.responsibilities.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-[#006c67] mb-1">Why Join:</h4>
+                <ul className="list-disc list-inside text-gray-600 space-y-1">
+                  {role.benefits.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
 
         {/* Educational Content Section */}
         <section className="container mx-auto px-4 py-20">

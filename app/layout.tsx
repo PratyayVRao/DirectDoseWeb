@@ -11,8 +11,16 @@ export const metadata: Metadata = {
   title: "DirectDose - Precision Insulin Dosing",
   description:
     "Calculate your mealtime insulin with confidence using our advanced carb counting and dosing algorithms.",
-    generator: 'v0.dev'
+  generator: "v0.dev",
+  icons: {
+  icon: [
+    { url: "/logo.png", sizes: "32x32", type: "image/png" },
+    { url: "/logo.png", sizes: "192x192", type: "image/png" },
+  ],
 }
+}
+
+
 
 export default function RootLayout({
   children,
