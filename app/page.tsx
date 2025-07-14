@@ -57,6 +57,9 @@ const roles = [
   }
 ]
 
+const explanationRequiredRoles = ["Partnerships Lead", "Chapter Head", "Chapter Founder", "Event/Workshop Coordinator"]
+const allFieldsRequired = true
+
 export default function HomePage() {
   const [user, setUser] = useState<any>(null)
   const [username, setUsername] = useState<string>("")
