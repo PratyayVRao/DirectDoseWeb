@@ -70,7 +70,9 @@ export default function HomePage() {
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [submitted, setSubmitted] = useState(false)
+ const [showAllDetails, setShowAllDetails] = useState(false)
 
+  const toggleAllDescriptions = () => setShowAllDetails(!showAllDetails)
   const supabase = createClient()
 
   useEffect(() => {
