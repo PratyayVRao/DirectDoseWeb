@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { GlucoseAnimation } from "@/components/glucose-animation"
 import { createClient } from "@/utils/supabase/client"
+import { Dialog } from "@headlessui/react"
 
 const encouragingMessages = [
   "Sweet calculations ahead!",
@@ -19,128 +20,25 @@ const encouragingMessages = [
 ]
 
 const roles = [
-  {
-    title: "Volunteer",
-    summary:
-      "Support campaigns, events, and community outreach with flexible involvement.",
-    responsibilities: [
-      "Share DirectDose materials at school or in your community",
-      "Support outreach efforts, events, or campaigns",
-      "Promote our mission through social media or word-of-mouth",
-      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
-    ],
-    benefits: [
-      "Low time commitment, high community impact",
-      "Fulfills service hour or extracurricular leadership goals",
-      "Opportunity to move into higher leadership roles",
-    ],
-  },
-  {
-    title: "Social Media Manager",
-    summary:
-      "Craft content that educates and energizes DirectDose’s online presence.",
-    responsibilities: [
-      "Manage and grow DirectDose’s Instagram (and other platforms if needed)",
-      "Create and schedule informative, engaging content",
-      "Collaborate with other teams to promote campaigns or events",
-      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
-    ],
-    benefits: [
-      "Build a portfolio of design, content, and strategy",
-      "Be the voice of a youth-led health initiative",
-      "Gain real-world experience in nonprofit digital outreach",
-    ],
-  },
-  {
-    title: "Outreach Lead",
-    summary:
-      "Lead efforts to expand DirectDose’s visibility in schools and communities.",
-    responsibilities: [
-      "Write and send outreach emails to student clubs, schools, and organizations",
-      "Lead communication drives to build our supporter network",
-      "Coordinate with volunteers to distribute materials",
-      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
-    ],
-    benefits: [
-      "Strengthen your public speaking and persuasive writing skills",
-      "Play a key role in expanding a national movement",
-      "Collaborate closely with team leads on strategy",
-    ],
-  },
-  {
-    title: "Partnerships Lead",
-    summary:
-      "Identify and manage relationships with partner organizations and clubs.",
-    responsibilities: [
-      "Identify potential partner groups, clubs, or nonprofits",
-      "Develop and pitch partnership proposals",
-      "Maintain communications with partner organizations",
-      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
-    ],
-    benefits: [
-      "Gain experience in networking, collaboration, and strategy",
-      "Help build partnerships that create real-world impact",
-      "Lead meaningful connections that support diabetes education",
-    ],
-  },
-  {
-    title: "Chapter Head",
-    summary:
-      "Manage a DirectDose team at your school and organize regional efforts.",
-    responsibilities: [
-      "Lead your school’s or region’s DirectDose team",
-      "Organize at least one event or campaign per semester",
-      "Represent your chapter in regular communication with the national team",
-      "Refer at least 10 people to sign up at direct-dose.com and provide their email addresses to verify",
-    ],
-    benefits: [
-      "Gain leadership experience by managing your own team",
-      "Represent a national nonprofit in your local community",
-      "Build your college application with real impact",
-    ],
-  },
-  {
-    title: "Chapter Founder",
-    summary:
-      "Start a new DirectDose chapter in your school or city and lead awareness efforts.",
-    responsibilities: [
-      "Complete onboarding and training from the national team",
-      "Recruit 3–5 core members for your chapter",
-      "Organize an awareness campaign or event",
-      "Refer at least 10 people to sign up at direct-dose.com and provide their email addresses to verify",
-    ],
-    benefits: [
-      "Be recognized as the official founder of a chapter",
-      "Receive leadership resources, templates, and direct support",
-      "Lead lasting health education change in your community",
-    ],
-  },
-  {
-    title: "Event/Workshop Coordinator",
-    summary:
-      "Plan events that raise awareness about insulin safety and affordability.",
-    responsibilities: [
-      "Organize school events, discussions, or fundraisers",
-      "Coordinate logistics and volunteer teams",
-      "Promote events with flyers, announcements, or social media",
-      "Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify",
-    ],
-    benefits: [
-      "Gain experience in planning and leading real-world events",
-      "Help build a more informed and supportive community",
-      "Take the lead in organizing public health initiatives",
-    ],
-  },
+  { title: "Outreach Team", description: "Help us connect with hospitals, schools, and nonprofits." },
+  { title: "Design & UX", description: "Create engaging interfaces and user flows for diabetics." },
+  { title: "Medical Research", description: "Assist in ensuring our features align with current diabetes treatment guidelines." },
+  { title: "Marketing", description: "Spread the word about DirectDose across social media and beyond." },
+  { title: "Software Development", description: "Help improve app performance and add new features." }
 ]
-
-
 
 export default function HomePage() {
   const [user, setUser] = useState<any>(null)
   const [username, setUsername] = useState<string>("")
   const [greeting, setGreeting] = useState("")
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const [fullName, setFullName] = useState("")
+  const [email, setEmail] = useState("")
+  const [message, setMessage] = useState("")
+  const [submitted, setSubmitted] = useState(false)
+
   const supabase = createClient()
-  const [expandedRoles, setExpandedRoles] = useState<number[]>([])
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -152,17 +50,14 @@ export default function HomePage() {
         if (user) {
           setUser(user)
 
-          // Get username from profile
           const { data: profile } = await supabase.from("profiles").select("username").eq("id", user.id).single()
 
           if (profile?.username) {
             setUsername(profile.username)
           } else {
-            // Fallback to email if no username
             setUsername(user.email?.split("@")[0] || "Friend")
           }
 
-          // Set random greeting
           const randomGreeting = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)]
           setGreeting(randomGreeting)
         }
@@ -174,10 +69,39 @@ export default function HomePage() {
     checkAuth()
   }, [supabase])
 
+  const toggleRole = (role: string) => {
+    setSelectedRoles((prev) =>
+      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]
+    )
+  }
+
+  const handleSubmit = async () => {
+    const body = `Name: ${fullName}\nEmail: ${email}\nRoles: ${selectedRoles.join(", ")}\nMessage: ${message}`
+    await fetch("https://formsubmit.co/ajax/Pratyay015@gmail.com", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        name: fullName,
+        email: email,
+        message: body,
+      }),
+    })
+    setSubmitted(true)
+    setTimeout(() => {
+      setIsModalOpen(false)
+      setSubmitted(false)
+      setFullName("")
+      setEmail("")
+      setSelectedRoles([])
+      setMessage("")
+    }, 2000)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 relative overflow-hidden">
-
-      {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-teal-200/30 to-emerald-200/30 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-emerald-200/30 to-teal-200/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -185,7 +109,6 @@ export default function HomePage() {
       </div>
 
       <div className="relative z-10">
-        {/* Hero Section */}
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-[#e6fff9]">
           <div className="max-w-4xl mx-auto text-center">
             {user && (
@@ -217,128 +140,85 @@ export default function HomePage() {
                   Sign In
                 </Link>
               )}
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="px-8 py-4 bg-white border-2 border-[#006c67] text-[#006c67] rounded-full hover:bg-[#006c67] hover:text-white transition-all duration-300 font-semibold text-lg"
+              >
+                Join Us
+              </button>
             </div>
           </div>
         </section>
 
-        {/* Animation Section */}
-        <section className="container mx-auto px-4 py-16 bg-white">
-  <div className="max-w-2xl mx-auto">
-    <GlucoseAnimation />
-  </div>
-</section>
-
-
-        {/* Features Section */}
-        <section className="container mx-auto px-4 py-20">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-[#006c67] text-center mb-16">Why Choose DirectDose?</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#006c67] to-[#09fbb7] rounded-full flex items-center justify-center mb-6">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+        <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
+          <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Dialog.Panel className="bg-white max-w-lg w-full rounded-2xl p-6 shadow-xl">
+              <Dialog.Title className="text-2xl font-bold mb-4 text-[#006c67]">Join the DirectDose Team</Dialog.Title>
+              {!submitted ? (
+                <>
+                  <div className="space-y-4">
+                    {roles.map((role) => (
+                      <div key={role.title}>
+                        <label className="flex items-start gap-2">
+                          <input
+                            type="checkbox"
+                            className="mt-1"
+                            checked={selectedRoles.includes(role.title)}
+                            onChange={() => toggleRole(role.title)}
+                          />
+                          <div>
+                            <span className="font-semibold text-[#006c67]">{role.title}</span>
+                            <p className="text-sm text-gray-600">{role.description}</p>
+                          </div>
+                        </label>
+                      </div>
+                    ))}
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="w-full p-2 border rounded-lg"
                     />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-[#006c67] mb-4">High School Innovation</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Created by high school students to solve real-world problems for diabetics.
-                </p>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#006c67] to-[#09fbb7] rounded-full flex items-center justify-center mb-6">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full p-2 border rounded-lg"
                     />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-[#006c67] mb-4">Simple to Use</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Our intuitive interface makes calculating insulin doses quick and easy.
-                </p>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#006c67] to-[#09fbb7] rounded-full flex items-center justify-center mb-6">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-[#006c67] mb-4">Affordable</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Free to use, making diabetes management accessible to everyone.
-                </p>
-              </div>
-            </div>
+                    {selectedRoles.length > 0 && (
+                      <textarea
+                        placeholder="Why do you want to join?"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="w-full p-2 border rounded-lg"
+                        rows={4}
+                      />
+                    )}
+                  </div>
+                  <div className="mt-6 flex justify-between">
+                    <button
+                      onClick={() => setIsModalOpen(false)}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSubmit}
+                      className="px-6 py-2 bg-[#006c67] text-white rounded-lg hover:bg-[#09fbb7] hover:text-[#006c67]"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p className="text-green-600 font-medium text-center">Submission received! Thank you.</p>
+              )}
+            </Dialog.Panel>
           </div>
-        </section>
-
-
-      {/* Join Us Section */}
-<section className="container mx-auto px-4 py-20">
-  <div className="max-w-6xl mx-auto">
-    <h2 className="text-4xl font-bold text-[#006c67] text-center mb-12">Join the Cause</h2>
-    <div className="grid md:grid-cols-2 gap-8">
-      {roles.map((role, index) => (
-        <div
-          key={index}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
-        >
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-2xl font-bold text-[#006c67]">{role.title}</h3>
-            <button
-              onClick={() =>
-                setExpandedRoles((prev) =>
-                  prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-                )
-              }
-              className="px-4 py-1 text-sm border border-[#006c67] text-[#006c67] rounded-full hover:bg-[#006c67] hover:text-white transition-all duration-200"
-            >
-              Role Info
-            </button>
-          </div>
-          <p className="text-gray-600 mb-2">{role.summary}</p>
-          {expandedRoles.includes(index) && (
-            <div className="mt-4 space-y-4">
-              <div>
-                <h4 className="text-lg font-semibold text-[#006c67] mb-1">Responsibilities:</h4>
-                <ul className="list-disc list-inside text-gray-600 space-y-1">
-                  {role.responsibilities.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-lg font-semibold text-[#006c67] mb-1">Why Join:</h4>
-                <ul className="list-disc list-inside text-gray-600 space-y-1">
-                  {role.benefits.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-
+        </Dialog>
 
         {/* Educational Content Section */}
         <section className="container mx-auto px-4 py-20">
@@ -569,5 +449,6 @@ export default function HomePage() {
         </footer>
       </div>
     </div>
+    
   )
 }
