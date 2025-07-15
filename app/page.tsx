@@ -27,17 +27,17 @@ const roles = [
   },
   {
     title: "Social Media Manager",
-    description: "Lead DirectDose’s social media with engaging, educational content.",
+    description: "Lead a part of DirectDose’s social media with engaging, educational content.",
     full: `You’ll lead DirectDose’s online presence by crafting content that educates and energizes. Ideal for someone who enjoys visual storytelling, advocacy, and making social media meaningful.\n\nResponsibilities:\n- Manage and grow DirectDose’s Instagram (and other platforms if needed)\n- Create and schedule informative, engaging content\n- Collaborate with other teams to promote campaigns or events\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Build a portfolio of design, content, and strategy\n- Be the voice of a youth-led health initiative\n- Gain real-world experience in nonprofit digital outreach`
   },
   {
     title: "Outreach Lead",
-    description: "Expand DirectDose’s presence through clubs, schools, and drives.",
+    description: "Expand DirectDose’s presence through clubs, schools, and fundraisers.",
     full: `The Outreach Lead is responsible for expanding DirectDose’s visibility across schools, clubs, and communities. You’ll run outreach campaigns and lead efforts to connect with new audiences.\n\nResponsibilities:\n- Write and send outreach emails to student clubs, schools, and organizations\n- Lead communication drives to build our supporter network\n- Coordinate with volunteers to distribute materials\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Strengthen your public speaking and persuasive writing skills\n- Play a key role in expanding a national movement\n- Collaborate closely with team leads on strategy`
   },
   {
     title: "Partnerships Lead",
-    description: "Forge connections with clubs, nonprofits, and advocacy groups.",
+    description: "Forge connections with clubs, nonprofits, and medical institutions.",
     full: `The Partnerships Lead identifies and manages relationships with organizations, schools, and health advocates who can help grow DirectDose’s mission and reach.\n\nResponsibilities:\n- Identify potential partner groups, clubs, or nonprofits\n- Develop and pitch partnership proposals\n- Maintain communications with partner organizations\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Gain experience in networking, collaboration, and strategy\n- Help build partnerships that create real-world impact\n- Lead meaningful connections that support diabetes education`
   },
   {
@@ -52,7 +52,7 @@ const roles = [
   },
   {
     title: "Event/Workshop Coordinator",
-    description: "Plan school events and public health campaigns.",
+    description: "Plan school events, fundraisers and public health campaigns.",
     full: `You’ll plan and organize impactful events that raise awareness about insulin safety, affordability, and access. You’ll bring people together to learn, connect, and act.\n\nResponsibilities:\n- Organize school events, discussions, or fundraisers\n- Coordinate logistics and volunteer teams\n- Promote events with flyers, announcements, or social media\n- Refer at least 3 people to sign up at direct-dose.com and provide their email addresses to verify\n\nWhy Join:\n- Gain experience in planning and leading real-world events\n- Help build a more informed and supportive community\n- Take the lead in organizing public health initiatives`
   }
 ]
@@ -202,22 +202,29 @@ export default function HomePage() {
               {!submitted ? (
                 <>
                   <div className="space-y-4">
-                    {roles.map((role) => (
-                      <div key={role.title}>
-                        <label className="flex items-start gap-2">
-                          <input
-                            type="checkbox"
-                            className="mt-1"
-                            checked={selectedRoles.includes(role.title)}
-                            onChange={() => toggleRole(role.title)}
-                          />
-                          <div>
-                            <span className="font-semibold text-[#006c67]">{role.title}</span>
-                            <p className="text-sm text-gray-600">{role.description}</p>
-                          </div>
-                        </label>
-                      </div>
-                    ))}
+                   {roles.map((role) => (
+                <div key={role.title}>
+                 <label className="flex items-start gap-2">
+      <input
+        type="checkbox"
+        className="mt-1"
+        checked={selectedRoles.includes(role.title)}
+        onChange={() => toggleRole(role.title)}
+      />
+      <div>
+        <span className="font-semibold text-[#006c67]">{role.title}</span>
+        <p className="text-sm text-gray-600">{role.description}</p>
+        {/* ✅ This line is new — it shows full info when toggle is on */}
+        {showAllDetails && (
+          <p className="text-sm text-gray-500 whitespace-pre-line mt-1 transition-all duration-300 ease-in-out">
+            {role.full}
+          </p>
+        )}
+      </div>
+    </label>
+  </div>
+))}
+
                     <input
                       type="text"
                       placeholder="Full Name"
