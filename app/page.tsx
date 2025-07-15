@@ -197,7 +197,7 @@ export default function HomePage() {
         <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
           <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
           <div className="fixed inset-0 flex items-center justify-center p-4">
-            <Dialog.Panel className="bg-white max-w-lg w-full rounded-2xl p-6 shadow-xl">
+            <Dialog.Panel className="bg-white max-w-lg w-full max-h-[90vh] overflow-y-auto rounded-2xl p-6 shadow-xl">
               <Dialog.Title className="text-2xl font-bold mb-4 text-[#006c67]">Join the DirectDose Team</Dialog.Title>
               {!submitted ? (
                 <>
