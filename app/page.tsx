@@ -232,24 +232,25 @@ export default function HomePage() {
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full p-2 border rounded-lg"
                     />
-                    {selectedRoles.length > 0 && (
-                      
-                      <textarea
-                        placeholder="Why do you want to join?"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="w-full p-2 border rounded-lg"
-                        rows={4}
-                      />
-                    )}
+                    {selectedRoles.some(role => explanationRequiredRoles.includes(role)) && (
+  <textarea
+    placeholder="Why do you want to join?"
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    className="w-full p-2 border rounded-lg"
+    rows={4}
+  />
+)}
+
                   </div>
                   <div className="mt-6 flex justify-between">
                     <button
-  className="mb-4 px-6 py-2 rounded-2xl bg-gradient-to-r from-[#00b894] to-[#006c67] text-white font-semibold shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-200"
   onClick={toggleAllDescriptions}
+  className="px-6 py-2 rounded-lg font-semibold transition-all duration-200 bg-[#006c67] text-white hover:bg-[#09fbb7] hover:text-[#006c67]"
 >
   {showAllDetails ? "Hide Role Info" : "Show Role Info"}
 </button>
+
 
 
                     <button
