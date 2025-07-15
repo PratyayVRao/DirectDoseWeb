@@ -57,6 +57,8 @@ const roles = [
   }
 ]
 
+
+
 const explanationRequiredRoles = ["Partnerships Lead", "Chapter Head", "Chapter Founder", "Event/Workshop Coordinator"]
 const allFieldsRequired = true
 
@@ -75,6 +77,12 @@ export default function HomePage() {
   const [submitted, setSubmitted] = useState(false)
 
   const supabase = createClient()
+  const isFormValid = () => {
+  if (!fullName.trim() || !email.trim() || selectedRoles.length === 0) return false
+  const needsExplanation = selectedRoles.some((role) => explanationRequiredRoles.includes(role))
+  if (needsExplanation && !message.trim()) return false
+  return true
+}
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -225,6 +233,7 @@ export default function HomePage() {
                       className="w-full p-2 border rounded-lg"
                     />
                     {selectedRoles.length > 0 && (
+                      
                       <textarea
                         placeholder="Why do you want to join?"
                         value={message}
@@ -236,11 +245,12 @@ export default function HomePage() {
                   </div>
                   <div className="mt-6 flex justify-between">
                     <button
-  className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+  className="mb-4 px-6 py-2 rounded-2xl bg-gradient-to-r from-[#00b894] to-[#006c67] text-white font-semibold shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-200"
   onClick={toggleAllDescriptions}
 >
   {showAllDetails ? "Hide Role Info" : "Show Role Info"}
 </button>
+
 
                     <button
                       onClick={() => setIsModalOpen(false)}
@@ -249,11 +259,16 @@ export default function HomePage() {
                       Cancel
                     </button>
                     <button
-                      onClick={handleSubmit}
-                      className="px-6 py-2 bg-[#006c67] text-white rounded-lg hover:bg-[#09fbb7] hover:text-[#006c67]"
-                    >
-                      Submit
-                    </button>
+  onClick={handleSubmit}
+  disabled={!isFormValid()}
+  className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+    isFormValid()
+      ? 'bg-[#006c67] text-white hover:bg-[#09fbb7] hover:text-[#006c67]'
+      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+  }`}
+>
+  Submit
+</button>
                   </div>
                 </>
               ) : (
