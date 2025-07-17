@@ -144,18 +144,14 @@ export default function AboutPage() {
             <h3 className="text-xl font-bold mb-3 text-[#006c67]">Pratyay Rao</h3>
             <h4 className="text-lg font-medium mb-4 text-[#006c67]">CEO and Founder</h4>
             <p className="text-[#006c67] mb-4">
-              Pratyay Rao, a young entrepreneur from Winnetka, Illinois, is a sophomore at New Trier High School and an
-              active member of his community. His passion for medicine and entrepreneurship has lead to incredible impact through DirectDose. DirectDose has won multiple pitch competitions, including the Illinois Wesleyan InnoVators Pitch Competition, earning thousands of dollars in awards.
+              Pratyay Rao, a sophomore at New Trier High School from Winnetka, Illinois, is actively involved in his community. His interest in medicine and entrepreneurship has helped him develop DirectDose, which has earned recognition by winning multiple pitch competitions, including the Illinois Wesleyan InnoVators Pitch Competition, with awards totaling several thousand dollars.
             </p>
             <p className="text-[#006c67] mb-4">
-              Pratyay has raised over $10,000 for cancer research, combining his talents in piano and business to
-              support the cause. In addition, he has volunteered with the Breast Cancer Hub, leading students in
-              organizing fundraisers and sales.
-            </p>
+              He has helped raise over $10,000 for cancer research by combining his skills in piano and business to support fundraising efforts. He has also volunteered with the Breast Cancer Hub, where he has assisted students in organizing fundraisers and sales.
+           </p>
             <p className="text-[#006c67]">
-              Pratyay integrates his expertise in medicine and computer science from Science Olympiad, business acumen
-              from DECA, and musical proficiency in piano to maximize his impact across all his endeavors.
-            </p>
+              Drawing on his experiences in medicine and computer science through Science Olympiad, business knowledge from DECA, and proficiency in piano, Pratyay aims to contribute meaningfully to the projects and causes he is involved with.
+           </p>
           </div>
         </div>
       </div>
