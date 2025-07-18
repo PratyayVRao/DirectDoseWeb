@@ -4,7 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Toaster } from "@/components/toaster"
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react" // ✅ correct import
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -14,14 +14,12 @@ export const metadata: Metadata = {
     "Calculate your mealtime insulin with confidence using our advanced carb counting and dosing algorithms.",
   generator: "v0.dev",
   icons: {
-  icon: [
-    { url: "/logo.png", sizes: "32x32", type: "image/png" },
-    { url: "/logo.png", sizes: "192x192", type: "image/png" },
-  ],
+    icon: [
+      { url: "/logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo.png", sizes: "192x192", type: "image/png" },
+    ],
+  },
 }
-}
-
-
 
 export default function RootLayout({
   children,
@@ -34,6 +32,7 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Toaster />
+        <Analytics /> {/* ✅ added Analytics here */}
       </body>
     </html>
   )
