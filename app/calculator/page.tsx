@@ -191,7 +191,7 @@ export default function MealCalculator() {
                 <Utensils className="mr-2 h-5 w-5" />
                 Food Input
               </CardTitle>
-              <CardDescription>Enter food items separated by commas with quantities.</CardDescription>
+              <CardDescription>Enter food items separated by commas with quantities Do NOT separate individual food names (cheese burger ≠ cheeseburger)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
