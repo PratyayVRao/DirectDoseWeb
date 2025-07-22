@@ -4,8 +4,14 @@ import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
 import { createClient } from "@/utils/supabase/client"
-import { Select, SelectItem } from "@/components/ui/select" // Assuming you have these components
 
 export default function BasalCalculator() {
   const supabase = createClient()
@@ -14,6 +20,7 @@ export default function BasalCalculator() {
   const [mode, setMode] = useState<"known" | "unknown" | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [history, setHistory] = useState<any[]>([])
+  const [weightUnit, setWeightUnit] = useState<"kg" | "lbs">("kg")
   const [data, setData] = useState({
     totalDailyInsulin: "",
     estimatedBasal: "",
@@ -26,7 +33,6 @@ export default function BasalCalculator() {
     notes: "",
     adjustmentHistory: [],
   })
-  const [weightUnit, setWeightUnit] = useState<"kg" | "lbs">("kg")
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
@@ -74,26 +80,33 @@ export default function BasalCalculator() {
         adjustment_history: data.adjustmentHistory,
         recommended_adjustment: recommendedAdjustment,
         test_date: new Date().toISOString().split("T")[0],
-        test_time: new Date().toLocaleTimeString(),
         is_completed: true,
         updated_at: new Date().toISOString(),
         created_at: new Date().toISOString(),
       }
       await supabase.from("basal_calculator").insert(saveData)
-      // Reload history after save
+      // Update history after save
       const { data: records } = await supabase
         .from("basal_calculator")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
       if (records) setHistory(records)
-      setStep(6)
+
+      setStep(6) // Show results page
     } catch (err) {
       console.error(err)
       alert("Save failed")
     } finally {
       setIsSaving(false)
     }
+  }
+
+  const convertWeightToKg = (weight: number, unit: "kg" | "lbs") => {
+    if (unit === "lbs") {
+      return weight * 0.453592
+    }
+    return weight
   }
 
   const renderStep = () => {
@@ -107,8 +120,8 @@ export default function BasalCalculator() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <p>
-              Your Total Daily Insulin (TDI) is the total amount of insulin you
-              take in one day, including basal and mealtime insulin.
+              Total Daily Insulin (TDI) is the total amount of insulin you use in a
+              day, including basal and mealtime doses.
             </p>
             <Button
               className="w-full h-16 text-lg"
@@ -140,8 +153,8 @@ export default function BasalCalculator() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              Enter the total amount of insulin you take in a day (both basal and
-              mealtime), usually in units.
+              Enter the total units of insulin you usually take in 24 hours,
+              including both basal and mealtime insulin.
             </p>
             <Input
               type="number"
@@ -151,22 +164,19 @@ export default function BasalCalculator() {
                 setData({ ...data, totalDailyInsulin: e.target.value })
               }
             />
-            <div className="flex gap-4 mt-4">
-              <Button onClick={prev} className="flex-1">
-                Back
-              </Button>
+            <div className="flex gap-4">
+              <Button onClick={prev}>Back</Button>
               <Button
                 onClick={() => {
                   const tdi = parseFloat(data.totalDailyInsulin)
                   if (isNaN(tdi) || tdi <= 0) {
-                    alert("Please enter a valid number for TDI.")
+                    alert("Please enter a valid positive number for TDI")
                     return
                   }
                   const est = Math.round(tdi * 0.45 * 10) / 10
                   setData({ ...data, estimatedBasal: est.toString() })
                   next()
                 }}
-                className="flex-1"
               >
                 Next
               </Button>
@@ -179,33 +189,23 @@ export default function BasalCalculator() {
       return (
         <Card className="p-6">
           <CardHeader>
-            <CardTitle>Enter your weight</CardTitle>
+            <CardTitle>Enter your weight to estimate your insulin needs</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              We can estimate your insulin needs based on your weight. Please
-              enter your weight and select the unit.
+              If you don't know your TDI, we will estimate it based on your body
+              weight.
             </p>
+
             <Input
               type="number"
-              placeholder="e.g., 70"
+              placeholder="Enter your weight"
               onChange={(e) => {
                 const weight = parseFloat(e.target.value)
-                if (isNaN(weight) || weight <= 0) {
-                  setData({
-                    ...data,
-                    totalDailyInsulin: "",
-                    estimatedBasal: "",
-                    currentBasalDose: "",
-                  })
-                  return
-                }
-                let weightInKg = weight
-                if (weightUnit === "lbs") {
-                  weightInKg = weight / 2.20462
-                }
-                const tdi = Math.round(weightInKg * 0.5)
-                const basal = Math.round(tdi * 0.45 * 10) / 10
+                if (isNaN(weight) || weight <= 0) return
+                const weightKg = convertWeightToKg(weight, weightUnit)
+                const tdi = Math.round(weightKg * 0.5) // 0.5 units/kg/day estimate
+                const basal = Math.round(tdi * 0.45 * 10) / 10 // basal = 45% of TDI
                 setData({
                   ...data,
                   totalDailyInsulin: tdi.toString(),
@@ -213,29 +213,26 @@ export default function BasalCalculator() {
                   currentBasalDose: basal.toString(),
                 })
               }}
-              value={
-                data.totalDailyInsulin
-                  ? undefined
-                  : "" /* Let user input freely */
-              }
             />
-            <div className="w-24 mt-2">
-              <label className="mr-2 font-semibold block mb-1">Unit:</label>
+
+            <div className="w-48 mt-2">
               <Select
                 value={weightUnit}
                 onValueChange={(val) => setWeightUnit(val as "kg" | "lbs")}
               >
-                <SelectItem value="kg">Kilograms (kg)</SelectItem>
-                <SelectItem value="lbs">Pounds (lbs)</SelectItem>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="kg">Kilograms (kg)</SelectItem>
+                  <SelectItem value="lbs">Pounds (lbs)</SelectItem>
+                </SelectContent>
               </Select>
             </div>
-            <div className="flex gap-4 mt-4">
-              <Button onClick={prev} className="flex-1">
-                Back
-              </Button>
-              <Button onClick={next} className="flex-1" disabled={!data.totalDailyInsulin}>
-                Next
-              </Button>
+
+            <div className="flex gap-4 mt-6">
+              <Button onClick={prev}>Back</Button>
+              <Button onClick={next}>Next</Button>
             </div>
           </CardContent>
         </Card>
@@ -249,9 +246,8 @@ export default function BasalCalculator() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              Select how you will perform your basal insulin test. Overnight
-              fasting means fasting during sleep. Daytime fasting means fasting
-              during the day.
+              Choose the type of fasting test you performed. Overnight fasting means
+              you fasted overnight. Daytime fasting means you fasted during the day.
             </p>
             <Button
               className="w-full h-14"
@@ -271,7 +267,7 @@ export default function BasalCalculator() {
             >
               Daytime Fasting
             </Button>
-            <Button variant="secondary" onClick={prev} className="mt-4 w-full">
+            <Button variant="secondary" onClick={prev}>
               Back
             </Button>
           </CardContent>
@@ -286,8 +282,8 @@ export default function BasalCalculator() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              Please enter your blood sugar readings before and after your fasting
-              period in mg/dL.
+              Please enter your blood sugar before the fasting period and after the
+              fasting period.
             </p>
             <Input
               type="number"
@@ -301,19 +297,19 @@ export default function BasalCalculator() {
               value={data.morningBg}
               onChange={(e) => setData({ ...data, morningBg: e.target.value })}
             />
-            <div className="flex gap-4 mt-4">
-              <Button onClick={prev} className="flex-1">
-                Back
-              </Button>
+            <div className="flex gap-4">
+              <Button onClick={prev}>Back</Button>
               <Button
                 onClick={() => {
-                  if (!data.bedtimeBg || !data.morningBg) {
-                    alert("Please enter both blood sugar readings.")
+                  // Validate BG inputs
+                  const before = parseFloat(data.bedtimeBg)
+                  const after = parseFloat(data.morningBg)
+                  if (isNaN(before) || isNaN(after) || before <= 0 || after <= 0) {
+                    alert("Please enter valid positive numbers for blood sugar levels.")
                     return
                   }
                   next()
                 }}
-                className="flex-1"
               >
                 Next
               </Button>
@@ -331,44 +327,45 @@ export default function BasalCalculator() {
           <CardContent className="space-y-4">
             <p>
               If you have urine test results, please select the values below.
-              Otherwise, you may skip this step.
+              Otherwise, you can skip this step.
             </p>
-            <div>
-              <label className="font-semibold mb-1 block">Urine Glucose</label>
-              <div className="w-48">
-                <Select
-                  value={data.urineGlucose}
-                  onValueChange={(val) => setData({ ...data, urineGlucose: val })}
-                >
-                  <SelectItem value="">-- Select --</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
+
+            <label className="block font-semibold mb-1">Urine Glucose</label>
+            <div className="w-48">
+              <Select
+                value={data.urineGlucose}
+                onValueChange={(val) => setData({ ...data, urineGlucose: val })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select urine glucose level" />
+                </SelectTrigger>
+                <SelectContent>
                   <SelectItem value="normal">Normal</SelectItem>
                   <SelectItem value="high">High</SelectItem>
-                </Select>
-              </div>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="mt-4">
-              <label className="font-semibold mb-1 block">Urine Ketones</label>
-              <div className="w-48">
-                <Select
-                  value={data.urineKetones}
-                  onValueChange={(val) => setData({ ...data, urineKetones: val })}
-                >
-                  <SelectItem value="">-- Select --</SelectItem>
-                  <SelectItem value="absent">Absent</SelectItem>
+            <label className="block font-semibold mt-4 mb-1">Urine Ketones</label>
+            <div className="w-48">
+              <Select
+                value={data.urineKetones}
+                onValueChange={(val) => setData({ ...data, urineKetones: val })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select urine ketones" />
+                </SelectTrigger>
+                <SelectContent>
                   <SelectItem value="present">Present</SelectItem>
-                </Select>
-              </div>
+                  <SelectItem value="absent">Absent</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex gap-4 mt-6">
-              <Button onClick={prev} className="flex-1">
-                Back
-              </Button>
-              <Button onClick={next} className="flex-1">
-                Next
-              </Button>
+              <Button onClick={prev}>Back</Button>
+              <Button onClick={next}>Next</Button>
             </div>
           </CardContent>
         </Card>
@@ -381,21 +378,16 @@ export default function BasalCalculator() {
             <CardTitle>Notes (Optional)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p>
-              Write any notes about how you felt during the test or anything else
-              you'd like to remember.
-            </p>
+            <p>You can write how you felt during the fasting test here.</p>
             <Input
               placeholder="How did you feel during test?"
               value={data.notes}
               onChange={(e) => setData({ ...data, notes: e.target.value })}
             />
-            <div className="flex gap-4 mt-4">
-              <Button onClick={prev} className="flex-1">
-                Back
-              </Button>
-              <Button onClick={handleSave} disabled={isSaving} className="flex-1">
-                Save
+            <div className="flex gap-4">
+              <Button onClick={prev}>Back</Button>
+              <Button onClick={handleSave} disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save & See Result"}
               </Button>
             </div>
           </CardContent>
@@ -403,49 +395,46 @@ export default function BasalCalculator() {
       )
 
     if (step === 6) {
-      // Show current calculation results before history
-      const latest = history[0]
-      if (!latest) {
-        return (
-          <Card className="p-6">
-            <CardHeader>
-              <CardTitle>No Saved Data Found</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => setStep(0)} className="w-full">
-                Start New Calculation
-              </Button>
-            </CardContent>
-          </Card>
-        )
-      }
+      // Show calculation result before history
+      const currentBasal = parseFloat(data.currentBasalDose || data.estimatedBasal)
+      const bedtimeBg = parseFloat(data.bedtimeBg)
+      const morningBg = parseFloat(data.morningBg)
+      const bgChange = morningBg - bedtimeBg
+      const recommendedAdjustment = calculateAdjustment(bgChange, currentBasal)
 
       return (
         <Card className="p-6">
           <CardHeader>
-            <CardTitle>Basal Insulin Calculation Result</CardTitle>
+            <CardTitle>Calculation Result</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p>
-              <strong>Date:</strong> {latest.test_date} <br />
-              <strong>Time:</strong> {latest.test_time || "Unknown"}
+              <strong>Estimated Basal Dose:</strong> {data.estimatedBasal} units
             </p>
             <p>
-              <strong>Current Basal Dose:</strong> {latest.current_basal_dose} units
+              <strong>Current Basal Dose:</strong> {currentBasal} units
             </p>
             <p>
-              <strong>Recommended Adjustment:</strong> {latest.recommended_adjustment} units
+              <strong>Bedtime Blood Sugar:</strong> {bedtimeBg} mg/dL
             </p>
             <p>
-              The recommended adjustment suggests how much you should increase or
-              decrease your basal insulin based on your fasting blood sugar changes.
+              <strong>Morning Blood Sugar:</strong> {morningBg} mg/dL
             </p>
-            <Button
-              onClick={() => setStep(7)}
-              className="w-full"
-              autoFocus
-            >
-              View Full History
+            <p>
+              <strong>Blood Sugar Change:</strong> {bgChange} mg/dL
+            </p>
+            <p>
+              <strong>Recommended Adjustment:</strong>{" "}
+              {recommendedAdjustment === 0
+                ? "No change needed"
+                : recommendedAdjustment > 0
+                ? `Increase basal insulin by ${recommendedAdjustment} units`
+                : `Decrease basal insulin by ${Math.abs(recommendedAdjustment)} units`}
+            </p>
+
+            <Button onClick={() => setStep(7)}>See History</Button>
+            <Button onClick={() => setStep(0)} variant="secondary">
+              Start New Calculation
             </Button>
           </CardContent>
         </Card>
@@ -458,19 +447,19 @@ export default function BasalCalculator() {
           <CardHeader>
             <CardTitle>History of Saved Basal Dosages</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 max-h-[400px] overflow-auto">
-            {history.length === 0 && <p>No basal dosage records saved yet.</p>}
+          <CardContent className="space-y-4">
+            {history.length === 0 && <p>No saved basal dosage history found.</p>}
             {history.map((entry, idx) => (
               <div key={idx} className="p-3 border rounded">
                 <p>
-                  <strong>Date:</strong> {entry.test_date}{" "}
-                  <strong>Time:</strong> {entry.test_time || "Unknown"}
+                  <strong>Date:</strong> {new Date(entry.test_date).toLocaleString()}
                 </p>
                 <p>
-                  <strong>Current Basal Dose:</strong> {entry.current_basal_dose} units
+                  <strong>Current Basal:</strong> {entry.current_basal_dose} units
                 </p>
                 <p>
-                  <strong>Recommended Adjustment:</strong> {entry.recommended_adjustment} units
+                  <strong>Recommended Adjustment:</strong> {entry.recommended_adjustment}{" "}
+                  units
                 </p>
                 <p>
                   <strong>Notes:</strong> {entry.notes || "None"}
