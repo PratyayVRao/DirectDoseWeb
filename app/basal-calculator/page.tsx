@@ -108,6 +108,37 @@ export default function BasalCalculator() {
     }
     return weight
   }
+// Add this function above renderStep()
+const generateWarning = () => {
+  const { urineGlucose, urineKetones } = data
+  let messages: string[] = []
+
+  if (urineKetones === "present") {
+    messages.push(
+      "⚠️ Urine ketones are present. High ketones can be a sign of DKA. Please consult a healthcare provider before making insulin changes."
+    )
+  }
+
+  if (urineGlucose === "high") {
+    messages.push(
+      "⚠️ Urine glucose is high. Elevated glucose with ketones may indicate insulin deficiency."
+    )
+  }
+
+  if (messages.length > 0) {
+    return (
+      <div className="p-4 mt-2 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-900 rounded">
+        <p className="font-semibold mb-1">Important Note:</p>
+        <ul className="list-disc ml-5 space-y-1">
+          {messages.map((msg, idx) => (
+            <li key={idx}>{msg}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  return null
+}
 
   const renderStep = () => {
     if (step === 0)
@@ -403,42 +434,45 @@ export default function BasalCalculator() {
       const recommendedAdjustment = calculateAdjustment(bgChange, currentBasal)
 
       return (
-        <Card className="p-6">
-          <CardHeader>
-            <CardTitle>Calculation Result</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              <strong>Estimated Basal Dose:</strong> {data.estimatedBasal} units
-            </p>
-            <p>
-              <strong>Current Basal Dose:</strong> {currentBasal} units
-            </p>
-            <p>
-              <strong>Bedtime Blood Sugar:</strong> {bedtimeBg} mg/dL
-            </p>
-            <p>
-              <strong>Morning Blood Sugar:</strong> {morningBg} mg/dL
-            </p>
-            <p>
-              <strong>Blood Sugar Change:</strong> {bgChange} mg/dL
-            </p>
-            <p>
-              <strong>Recommended Adjustment:</strong>{" "}
-              {recommendedAdjustment === 0
-                ? "No change needed"
-                : recommendedAdjustment > 0
-                ? `Increase basal insulin by ${recommendedAdjustment} units`
-                : `Decrease basal insulin by ${Math.abs(recommendedAdjustment)} units`}
-            </p>
+  <Card className="p-6">
+    <CardHeader>
+      <CardTitle>Calculation Result</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <p>
+        <strong>Estimated Basal Dose:</strong> {data.estimatedBasal} units
+      </p>
+      <p>
+        <strong>Current Basal Dose:</strong> {currentBasal} units
+      </p>
+      <p>
+        <strong>Bedtime Blood Sugar:</strong> {bedtimeBg} mg/dL
+      </p>
+      <p>
+        <strong>Morning Blood Sugar:</strong> {morningBg} mg/dL
+      </p>
+      <p>
+        <strong>Blood Sugar Change:</strong> {bgChange} mg/dL
+      </p>
+      <p>
+        <strong>Recommended Adjustment:</strong>{" "}
+        {recommendedAdjustment === 0
+          ? "No change needed"
+          : recommendedAdjustment > 0
+          ? `Increase basal insulin by ${recommendedAdjustment} units`
+          : `Decrease basal insulin by ${Math.abs(recommendedAdjustment)} units`}
+      </p>
 
-            <Button onClick={() => setStep(7)}>See History</Button>
-            <Button onClick={() => setStep(0)} variant="secondary">
-              Start New Calculation
-            </Button>
-          </CardContent>
-        </Card>
-      )
+      {generateWarning()}
+
+      <Button onClick={() => setStep(7)}>See History</Button>
+      <Button onClick={() => setStep(0)} variant="secondary">
+        Start New Calculation
+      </Button>
+    </CardContent>
+  </Card>
+)
+
     }
 
     if (step === 7)
