@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   generator: "v0.dev",
   icons: {
     icon: [
-      { url: "/logo.png", sizes: "32x32", type: "image/png" },
-      { url: "/logo.png", sizes: "192x192", type: "image/png" },
+      { url: "/AppIcon.png", sizes: "32x32", type: "image/png" },
+      { url: "/AppIcon.png", sizes: "192x192", type: "image/png" },
     ],
   },
 }
