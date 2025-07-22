@@ -156,6 +156,39 @@ export default function ICRCalculator() {
 
     checkAuth()
   }, [supabase])
+  useEffect(() => {
+  async function fetchBasalCalculatorTDI() {
+    if (!userId) return
+
+    try {
+      const { data: basalRecords, error } = await supabase
+        .from("basal_calculator")
+        .select("total_daily_insulin")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (!error && basalRecords?.total_daily_insulin) {
+        setData((prevData) => ({
+          ...prevData,
+          // Only set totalDailyInsulin if it's empty or different
+          totalDailyInsulin:
+            prevData.totalDailyInsulin && prevData.totalDailyInsulin !== ""
+              ? prevData.totalDailyInsulin
+              : basalRecords.total_daily_insulin.toString(),
+        }))
+      }
+    } catch (error) {
+      console.error("Failed to fetch basal calculator TDI:", error)
+    }
+  }
+
+  if (isAuthenticated && userId) {
+    fetchBasalCalculatorTDI()
+  }
+}, [isAuthenticated, userId, supabase, setData])
+
 
   const saveProgress = async (dataToSave = data) => {
     setIsSaving(true)
@@ -505,11 +538,12 @@ export default function ICRCalculator() {
                 <div className="grid gap-2">
                   <Label htmlFor="totalDailyInsulin">Total Daily Insulin (TDI)</Label>
                   <Input
-                    type="number"
-                    id="totalDailyInsulin"
-                    value={data.totalDailyInsulin}
-                    onChange={(e) => setData({ ...data, totalDailyInsulin: e.target.value })}
-                  />
+  type="number"
+  id="totalDailyInsulin"
+  value={data.totalDailyInsulin}
+  onChange={(e) => setData({ ...data, totalDailyInsulin: e.target.value })}
+/>
+
                   <p className="text-sm text-[#006c67]">
                     This is the total amount of insulin you take in a 24-hour period, including both{" "}
                     <Link href="/basal-calculator" className="text-[#006c67] underline hover:text-[#004a46]">
