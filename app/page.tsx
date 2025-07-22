@@ -402,26 +402,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 mb-8">
-              <h3 className="text-2xl font-bold text-[#006c67] mb-4">Key Terms</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <p className="text-gray-600 leading-relaxed mb-4">
-                    <strong>Carbs:</strong> This refers to the amount of carbohydrates in the food you're eating, which
-                    will raise your blood sugar. Foods like bread, pasta, fruit, and sugar are high in carbs.
-                  </p>
-                  <p className="text-gray-600 leading-relaxed">
-                    <strong>Premeal Insulin:</strong> This is the bolus insulin you take before eating to cover the
-                    carbs in your meal.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-600 leading-relaxed">
-                    Both ICR and ISF are key for managing diabetes and keeping blood sugar levels stable.
-                  </p>
-                </div>
-              </div>
-            </div>
+            
 
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
               <h3 className="text-3xl font-bold text-[#006c67] mb-6">How Diabetes Works in the Body</h3>
