@@ -6,7 +6,14 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Loader2, LogOut, Save, UserCircle } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import type { User } from "@supabase/auth-helpers-nextjs"
@@ -33,6 +40,23 @@ export default function Profile() {
   const router = useRouter()
   const supabase = createClientComponentClient()
 
+  const fetchLatestCalculatedBasal = async (userId: string): Promise<number | null> => {
+    const { data, error } = await supabase
+      .from("basal_calculator")
+      .select("estimated_basal")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single()
+
+    if (error) {
+      console.warn("No recent basal found or error fetching it:", error.message)
+      return null
+    }
+
+    return data?.estimated_basal ?? null
+  }
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -48,19 +72,27 @@ export default function Profile() {
         setUser(user)
         console.log("Fetching profile for user:", user.id)
 
-        // Get user profile
-        const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single()
 
         if (data && !error) {
           console.log("Found profile:", data)
           setProfile(data)
           setUsername(data.username || "")
           setIcRatio(data.icr?.toString() || "15")
-          setBasalInsulin(data.basal_insulin?.toString() || "")
+
+          const latestBasal = await fetchLatestCalculatedBasal(user.id)
+          setBasalInsulin(
+            latestBasal !== null
+              ? latestBasal.toString()
+              : data.basal_insulin?.toString() || ""
+          )
         } else if (error) {
           console.error("Error fetching profile:", error)
 
-          // If the profile doesn't exist, create one
           if (error.code === "PGRST116") {
             console.log("Creating new profile")
             try {
@@ -73,9 +105,7 @@ export default function Profile() {
                 updated_at: new Date().toISOString(),
               })
 
-              if (insertError) {
-                throw insertError
-              }
+              if (insertError) throw insertError
 
               setProfile({
                 id: user.id,
@@ -133,24 +163,14 @@ export default function Profile() {
 
   const saveProfile = async () => {
     if (!user) return
-
     setIsSaving(true)
 
     try {
-      // Parse values as numbers
       const icRatioNumber = Number.parseFloat(icRatio) || 15
       const basalInsulinNumber = basalInsulin ? Number.parseFloat(basalInsulin) : null
 
-      console.log(
-        "Saving profile with ICR:",
-        icRatioNumber,
-        "basal insulin:",
-        basalInsulinNumber,
-        "and username:",
-        username,
-      )
+      console.log("Saving profile with ICR:", icRatioNumber, "basal insulin:", basalInsulinNumber, "and username:", username)
 
-      // Update the profile in the database
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -166,19 +186,6 @@ export default function Profile() {
         throw error
       }
 
-      // Update local state
-      setProfile((prev) =>
-        prev
-          ? {
-              ...prev,
-              username: username || null,
-              icr: icRatioNumber,
-              basal_insulin: basalInsulinNumber,
-            }
-          : null,
-      )
-
-      // Verify the update was successful by fetching the updated profile
       const { data: updatedProfile, error: fetchError } = await supabase
         .from("profiles")
         .select("*")
@@ -190,7 +197,6 @@ export default function Profile() {
         throw new Error("Failed to verify profile update")
       }
 
-      // Update local state with the fetched profile data
       if (updatedProfile) {
         console.log("Updated profile:", updatedProfile)
         setProfile(updatedProfile)
@@ -295,7 +301,9 @@ export default function Profile() {
                 placeholder="Enter your basal insulin dose"
                 className="border-[#006c67] focus-visible:ring-[#006c67]"
               />
-              <p className="text-xs text-[#006c67] opacity-80">Your daily basal (long-acting) insulin dose</p>
+              <p className="text-xs text-[#006c67] opacity-80">
+                Your daily basal (long-acting) insulin dose. Pulled from most recent basal calculator entry.
+              </p>
             </div>
 
             <div className="flex flex-col gap-2">
