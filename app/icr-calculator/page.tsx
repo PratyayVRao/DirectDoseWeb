@@ -65,6 +65,27 @@ export default function ICRCalculator() {
   const supabase = createClient()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
+async function fetchBasalCalculatorTDI(uid: string) {
+  try {
+    const { data: basalRecords, error } = await supabase
+      .from("basal_calculator")
+      .select("total_daily_insulin")
+      .eq("user_id", uid)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (!error && basalRecords?.total_daily_insulin) {
+      console.log("Using basal_calculator TDI:", basalRecords.total_daily_insulin)
+      setData((prevData) => ({
+        ...prevData,
+        totalDailyInsulin: basalRecords.total_daily_insulin.toString(),
+      }))
+    }
+  } catch (error) {
+    console.error("Failed to fetch basal calculator TDI:", error)
+  }
+}
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -78,6 +99,8 @@ export default function ICRCalculator() {
         if (user) {
           setIsAuthenticated(true)
           setUserId(user.id)
+          await fetchBasalCalculatorTDI(user.id)
+
 
           // Load saved data from localStorage first (for immediate display)
           loadFromLocalStorage()
@@ -105,6 +128,7 @@ export default function ICRCalculator() {
                 finalICR: savedData.final_icr?.toString() || null,
               }
               setData(mergedData)
+await fetchBasalCalculatorTDI(user.id)
 
               if (mergedData.initialICR) {
                 const icr = Number.parseFloat(mergedData.initialICR)
@@ -156,38 +180,7 @@ export default function ICRCalculator() {
 
     checkAuth()
   }, [supabase])
-  useEffect(() => {
-  async function fetchBasalCalculatorTDI() {
-    if (!userId) return
 
-    try {
-      const { data: basalRecords, error } = await supabase
-        .from("basal_calculator")
-        .select("total_daily_insulin")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle()
-
-      if (!error && basalRecords?.total_daily_insulin) {
-        setData((prevData) => ({
-          ...prevData,
-          // Only set totalDailyInsulin if it's empty or different
-          totalDailyInsulin:
-            prevData.totalDailyInsulin && prevData.totalDailyInsulin !== ""
-              ? prevData.totalDailyInsulin
-              : basalRecords.total_daily_insulin.toString(),
-        }))
-      }
-    } catch (error) {
-      console.error("Failed to fetch basal calculator TDI:", error)
-    }
-  }
-
-  if (isAuthenticated && userId) {
-    fetchBasalCalculatorTDI()
-  }
-}, [isAuthenticated, userId, supabase, setData])
 
 
   const saveProgress = async (dataToSave = data) => {
