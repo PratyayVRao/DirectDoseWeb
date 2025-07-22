@@ -217,57 +217,63 @@ const generateWarning = () => {
       )
 
     if (step === 1 && mode === "unknown")
-      return (
-        <Card className="p-6">
-          <CardHeader>
-            <CardTitle>Enter your weight to estimate your insulin needs</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              If you don't know your TDI, we will estimate it based on your body
-              weight.
-            </p>
+  return (
+    <Card className="p-6">
+      <CardHeader>
+        <CardTitle>Enter your weight to estimate your insulin needs</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p>
+          If you don't know your TDI, we will estimate it based on your body weight.
+        </p>
 
-            <Input
-              type="number"
-              placeholder="Enter your weight"
-              onChange={(e) => {
-                const weight = parseFloat(e.target.value)
-                if (isNaN(weight) || weight <= 0) return
-                const weightKg = convertWeightToKg(weight, weightUnit)
-                const tdi = Math.round(weightKg * 0.5) // 0.5 units/kg/day estimate
-                const basal = Math.round(tdi * 0.45 * 10) / 10 // basal = 45% of TDI
-                setData({
-                  ...data,
-                  totalDailyInsulin: tdi.toString(),
-                  estimatedBasal: basal.toString(),
-                  currentBasalDose: basal.toString(),
-                })
-              }}
-            />
+        <Input
+          type="number"
+          placeholder="Enter your weight"
+          onChange={(e) => {
+            const weight = parseFloat(e.target.value)
+            if (isNaN(weight) || weight <= 0) return
+            const weightKg = convertWeightToKg(weight, weightUnit)
+            const tdi = Math.round(weightKg * 0.5) // 0.5 units/kg/day estimate
+            const basal = Math.round(tdi * 0.45 * 10) / 10 // basal = 45% of TDI
+            setData({
+              ...data,
+              totalDailyInsulin: tdi.toString(),
+              estimatedBasal: basal.toString(),
+              currentBasalDose: basal.toString(),
+            })
+          }}
+        />
 
-            <div className="w-48 mt-2">
-              <Select
-                value={weightUnit}
-                onValueChange={(val) => setWeightUnit(val as "kg" | "lbs")}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="kg">Kilograms (kg)</SelectItem>
-                  <SelectItem value="lbs">Pounds (lbs)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        {data.totalDailyInsulin && (
+          <p className="text-sm text-green-700 font-medium">
+            Estimated TDI: {data.totalDailyInsulin} units/day
+          </p>
+        )}
 
-            <div className="flex gap-4 mt-6">
-              <Button onClick={prev}>Back</Button>
-              <Button onClick={next}>Next</Button>
-            </div>
-          </CardContent>
-        </Card>
-      )
+        <div className="w-48 mt-2">
+          <Select
+            value={weightUnit}
+            onValueChange={(val) => setWeightUnit(val as "kg" | "lbs")}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select unit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="kg">Kilograms (kg)</SelectItem>
+              <SelectItem value="lbs">Pounds (lbs)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex gap-4 mt-6">
+          <Button onClick={prev}>Back</Button>
+          <Button onClick={next}>Next</Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+
 
     if (step === 2)
       return (
