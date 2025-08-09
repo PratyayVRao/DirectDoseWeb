@@ -22,7 +22,7 @@ const encouragingMessages = [
   "You're tea-rific at health management!",
   "Olive your dedication to wellness!",
 ]
-const [bgColor, setBgColor] = useState("bg-gradient-to-br from-teal-50 to-emerald-50");
+
 
 const roles = [
   {
@@ -84,6 +84,7 @@ export default function HomePage() {
 const animationRef = useRef<HTMLDivElement | null>(null);
 const videoRef = useRef<HTMLVideoElement | null>(null); // 👈 Add this for the video element
 const [bgColor, setBgColor] = useState("bg-gradient-to-br from-teal-50 to-emerald-50");
+
 
 useEffect(() => {
   function onScroll() {
