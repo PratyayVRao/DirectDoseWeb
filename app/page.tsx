@@ -6,6 +6,8 @@ import { GlucoseAnimation } from "@/components/glucose-animation"
 import { createClient } from "@/utils/supabase/client"
 import { Dialog } from "@headlessui/react"
 import ScrollFrameAnimation from "@/components/ScrollFrameAnimation"
+import { useRef } from "react";
+
 
 
 const encouragingMessages = [
@@ -20,6 +22,7 @@ const encouragingMessages = [
   "You're tea-rific at health management!",
   "Olive your dedication to wellness!",
 ]
+const [bgColor, setBgColor] = useState("bg-gradient-to-br from-teal-50 to-emerald-50");
 
 const roles = [
   {
@@ -61,6 +64,7 @@ const roles = [
 
 
 
+
 const explanationRequiredRoles = ["Partnerships Lead", "Chapter Head", "Chapter Founder", "Event/Workshop Coordinator"]
 const allFieldsRequired = true
 
@@ -77,6 +81,35 @@ export default function HomePage() {
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [submitted, setSubmitted] = useState(false)
+const animationRef = useRef<HTMLDivElement | null>(null);
+const videoRef = useRef<HTMLVideoElement | null>(null); // 👈 Add this for the video element
+const [bgColor, setBgColor] = useState("bg-gradient-to-br from-teal-50 to-emerald-50");
+
+useEffect(() => {
+  function onScroll() {
+    if (!animationRef.current) return;
+
+    const rect = animationRef.current.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Check if animation section fully fills screen
+    const fullyInView = rect.top >= 0 && rect.bottom <= windowHeight;
+
+    if (fullyInView) {
+      setBgColor("bg-[#9899d2]");
+      videoRef.current?.play(); // 👈 Play the video only when fully in view
+    } else {
+      setBgColor("bg-gradient-to-br from-teal-50 to-emerald-50");
+      videoRef.current?.pause(); // optional pause if you want
+    }
+  }
+
+  window.addEventListener("scroll", onScroll);
+  onScroll();
+
+  return () => window.removeEventListener("scroll", onScroll);
+}, []);
+
 
   const supabase = createClient()
   const isFormValid = () => {
@@ -147,7 +180,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden transition-colors duration-700 ${bgColor}`}>
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-teal-200/30 to-emerald-200/30 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-emerald-200/30 to-teal-200/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -289,8 +323,6 @@ export default function HomePage() {
         </Dialog>
 
        
-
-    <ScrollFrameAnimation />
 
     
 
