@@ -324,10 +324,10 @@ useEffect(() => {
         </Dialog>
 
        
-<div ref={animationRef}>
+{/*<div ref={animationRef}>
   <ScrollFrameAnimation />
-</div>
-
+</div>*/
+}
 
     
 
