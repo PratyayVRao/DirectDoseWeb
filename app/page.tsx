@@ -5,6 +5,8 @@ import Link from "next/link"
 import { GlucoseAnimation } from "@/components/glucose-animation"
 import { createClient } from "@/utils/supabase/client"
 import { Dialog } from "@headlessui/react"
+import ScrollFrameAnimation from "@/components/ScrollFrameAnimation"
+
 
 const encouragingMessages = [
   "Sweet calculations ahead!",
@@ -286,65 +288,11 @@ export default function HomePage() {
           </div>
         </Dialog>
 
-        {/* Features Section */}
-       <section className="container mx-auto px-4 py-20">
-  <div className="max-w-6xl mx-auto">
-    <h2 className="text-4xl font-bold text-[#006c67] text-center mb-16">Why Choose DirectDose?</h2>
-    <div className="grid md:grid-cols-3 gap-8">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-        <div className="w-16 h-16 bg-[#006c67] rounded-full flex items-center justify-center mb-6">
-          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-            />
-          </svg>
-        </div>
-        <h3 className="text-2xl font-bold text-[#006c67] mb-4">High School Innovation</h3>
-        <p className="text-gray-600 leading-relaxed">
-          Created by high school students to solve real-world problems for diabetics.
-        </p>
-      </div>
+       
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-        <div className="w-16 h-16 bg-[#006c67] rounded-full flex items-center justify-center mb-6">
-          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-            />
-          </svg>
-        </div>
-        <h3 className="text-2xl font-bold text-[#006c67] mb-4">Simple to Use</h3>
-        <p className="text-gray-600 leading-relaxed">
-          Our intuitive interface makes calculating insulin doses quick and easy.
-        </p>
-      </div>
+    <ScrollFrameAnimation />
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-        <div className="w-16 h-16 bg-[#006c67] rounded-full flex items-center justify-center mb-6">
-          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-            />
-          </svg>
-        </div>
-        <h3 className="text-2xl font-bold text-[#006c67] mb-4">Affordable</h3>
-        <p className="text-gray-600 leading-relaxed">
-          Free to use, making diabetes management accessible to everyone.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
+    
 
         {/* Educational Content Section */}
         <section className="container mx-auto px-4 py-20">
@@ -504,6 +452,65 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+         {/* Features Section */}
+       <section className="container mx-auto px-4 py-20">
+  <div className="max-w-6xl mx-auto">
+    <h2 className="text-4xl font-bold text-[#006c67] text-center mb-16">Why Choose DirectDose?</h2>
+    <div className="grid md:grid-cols-3 gap-8">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+        <div className="w-16 h-16 bg-[#006c67] rounded-full flex items-center justify-center mb-6">
+          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+            />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-bold text-[#006c67] mb-4">High School Innovation</h3>
+        <p className="text-gray-600 leading-relaxed">
+          Created by high school students to solve real-world problems for diabetics.
+        </p>
+      </div>
+
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+        <div className="w-16 h-16 bg-[#006c67] rounded-full flex items-center justify-center mb-6">
+          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-bold text-[#006c67] mb-4">Simple to Use</h3>
+        <p className="text-gray-600 leading-relaxed">
+          Our intuitive interface makes calculating insulin doses quick and easy.
+        </p>
+      </div>
+
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+        <div className="w-16 h-16 bg-[#006c67] rounded-full flex items-center justify-center mb-6">
+          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+            />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-bold text-[#006c67] mb-4">Affordable</h3>
+        <p className="text-gray-600 leading-relaxed">
+          Free to use, making diabetes management accessible to everyone.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* CTA Section */}
         <section className="container mx-auto px-4 py-20">
