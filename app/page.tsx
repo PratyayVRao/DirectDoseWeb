@@ -2,11 +2,9 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { GlucoseAnimation } from "@/components/glucose-animation"
+
 import { createClient } from "@/utils/supabase/client"
 import { Dialog } from "@headlessui/react"
-import ScrollFrameAnimation from "@/components/ScrollFrameAnimation"
-
 
 const encouragingMessages = [
   "Sweet calculations ahead!",
@@ -362,13 +360,8 @@ Message: ${message}`
 
 
        
-{/*<div ref={animationRef}>
-  <ScrollFrameAnimation />
-</div>*/
-}
 
     
-
         {/* Educational Content Section */}
         <section className="container mx-auto px-4 py-20">
           <div className="max-w-6xl mx-auto">
@@ -587,7 +580,7 @@ Message: ${message}`
   </div>
 </section>
 
-        {/* CTA Section */}
+{/* CTA Section */}
         <section className="container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-white/20">
@@ -636,10 +629,6 @@ Message: ${message}`
             <p className="text-gray-500 text-sm">© 2025 DirectDose. All rights reserved.</p>
           </div>
         </footer>
-      </div>
-    </div>
-  )
-}
 
 
         
