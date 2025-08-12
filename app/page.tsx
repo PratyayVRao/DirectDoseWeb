@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-
+import Navbar from "@/components/navbar"
 import { createClient } from "@/utils/supabase/client"
 import { Dialog } from "@headlessui/react"
 
