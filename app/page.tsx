@@ -1,13 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { GlucoseAnimation } from "@/components/glucose-animation"
 import { createClient } from "@/utils/supabase/client"
 import { Dialog } from "@headlessui/react"
 import ScrollFrameAnimation from "@/components/ScrollFrameAnimation"
-import { useRef } from "react";
-
 
 
 const encouragingMessages = [
@@ -62,9 +60,6 @@ const roles = [
   }
 ]
 
-
-
-
 const explanationRequiredRoles = ["Partnerships Lead", "Chapter Head", "Chapter Founder", "Event/Workshop Coordinator"]
 const allFieldsRequired = true
 
@@ -79,46 +74,56 @@ export default function HomePage() {
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
+  const [schoolName, setSchoolName] = useState("")
+  const [city, setCity] = useState("")
+  const [country, setCountry] = useState("")
   const [message, setMessage] = useState("")
   const [submitted, setSubmitted] = useState(false)
-const animationRef = useRef<HTMLDivElement | null>(null);
-const videoRef = useRef<HTMLVideoElement | null>(null); // 👈 Add this for the video element
-const [bgColor, setBgColor] = useState("bg-gradient-to-br from-teal-50 to-emerald-50");
+  const animationRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null); // 👈 Add this for the video element
+  const [bgColor, setBgColor] = useState("bg-gradient-to-br from-teal-50 to-emerald-50");
 
 
-useEffect(() => {
-  function onScroll() {
-    if (!animationRef.current) return;
+  useEffect(() => {
+    function onScroll() {
+      if (!animationRef.current) return;
 
-    const rect = animationRef.current.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
+      const rect = animationRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
 
-    // Check if animation section fully fills screen
-    const fullyInView = rect.top >= 0 && rect.bottom <= windowHeight;
+      // Check if animation section fully fills screen
+      const fullyInView = rect.top >= 0 && rect.bottom <= windowHeight;
 
-    if (fullyInView) {
-      setBgColor("bg-[#9899d2]");
-      videoRef.current?.play(); // 👈 Play the video only when fully in view
-    } else {
-      setBgColor("bg-gradient-to-br from-teal-50 to-emerald-50");
-      videoRef.current?.pause(); // optional pause if you want
+      if (fullyInView) {
+        setBgColor("bg-[#9899d2]");
+        videoRef.current?.play(); // 👈 Play the video only when fully in view
+      } else {
+        setBgColor("bg-gradient-to-br from-teal-50 to-emerald-50");
+        videoRef.current?.pause(); // optional pause if you want
+      }
     }
-  }
 
-  window.addEventListener("scroll", onScroll);
-  onScroll();
+    window.addEventListener("scroll", onScroll);
+    onScroll();
 
-  return () => window.removeEventListener("scroll", onScroll);
-}, []);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
 
   const supabase = createClient()
   const isFormValid = () => {
-  if (!fullName.trim() || !email.trim() || selectedRoles.length === 0) return false
-  const needsExplanation = selectedRoles.some((role) => explanationRequiredRoles.includes(role))
-  if (needsExplanation && !message.trim()) return false
-  return true
-}
+    if (
+      !fullName.trim() ||
+      !email.trim() ||
+      selectedRoles.length === 0 ||
+      !schoolName.trim() ||
+      !city.trim() ||
+      !country.trim()
+    ) return false
+    const needsExplanation = selectedRoles.some((role) => explanationRequiredRoles.includes(role))
+    if (needsExplanation && !message.trim()) return false
+    return true
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -156,7 +161,13 @@ useEffect(() => {
   }
 
   const handleSubmit = async () => {
-    const body = `Name: ${fullName}\nEmail: ${email}\nRoles: ${selectedRoles.join(", ")}\nMessage: ${message}`
+    const body = `Name: ${fullName}
+Email: ${email}
+School Name: ${schoolName}
+City: ${city}
+Country: ${country}
+Roles: ${selectedRoles.join(", ")}
+Message: ${message}`
     await fetch("https://formsubmit.co/ajax/Pratyay015@gmail.com", {
       method: "POST",
       headers: {
@@ -177,6 +188,9 @@ useEffect(() => {
       setEmail("")
       setSelectedRoles([])
       setMessage("")
+      setSchoolName("")
+      setCity("")
+      setCountry("")
     }, 2000)
   }
 
@@ -239,28 +253,27 @@ useEffect(() => {
               {!submitted ? (
                 <>
                   <div className="space-y-4">
-                   {roles.map((role) => (
-                <div key={role.title}>
-                 <label className="flex items-start gap-2">
-      <input
-        type="checkbox"
-        className="mt-1"
-        checked={selectedRoles.includes(role.title)}
-        onChange={() => toggleRole(role.title)}
-      />
-      <div>
-        <span className="font-semibold text-[#006c67]">{role.title}</span>
-        <p className="text-sm text-gray-600">{role.description}</p>
-        {/* ✅ This line is new — it shows full info when toggle is on */}
-        {showAllDetails && (
-          <p className="text-sm text-gray-500 whitespace-pre-line mt-1 transition-all duration-300 ease-in-out">
-            {role.full}
-          </p>
-        )}
-      </div>
-    </label>
-  </div>
-))}
+                    {roles.map((role) => (
+                      <div key={role.title}>
+                        <label className="flex items-start gap-2">
+                          <input
+                            type="checkbox"
+                            className="mt-1"
+                            checked={selectedRoles.includes(role.title)}
+                            onChange={() => toggleRole(role.title)}
+                          />
+                          <div>
+                            <span className="font-semibold text-[#006c67]">{role.title}</span>
+                            <p className="text-sm text-gray-600">{role.description}</p>
+                            {showAllDetails && (
+                              <p className="text-sm text-gray-500 whitespace-pre-line mt-1 transition-all duration-300 ease-in-out">
+                                {role.full}
+                              </p>
+                            )}
+                          </div>
+                        </label>
+                      </div>
+                    ))}
 
                     <input
                       type="text"
@@ -276,26 +289,46 @@ useEffect(() => {
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full p-2 border rounded-lg"
                     />
+                    <input
+                      type="text"
+                      placeholder="School Name"
+                      value={schoolName}
+                      onChange={(e) => setSchoolName(e.target.value)}
+                      className="w-full p-2 border rounded-lg"
+                    />
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="w-full p-2 border rounded-lg"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Country"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      className="w-full p-2 border rounded-lg"
+                    />
+
                     {selectedRoles.some(role => explanationRequiredRoles.includes(role)) && (
-  <textarea
-    placeholder="Why do you want to join?"
-    value={message}
-    onChange={(e) => setMessage(e.target.value)}
-    className="w-full p-2 border rounded-lg"
-    rows={4}
-  />
-)}
+                      <textarea
+                        placeholder="Why do you want to join?"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="w-full p-2 border rounded-lg"
+                        rows={4}
+                      />
+                    )}
 
                   </div>
                   <div className="mt-6 flex justify-between">
                     <button
-  onClick={toggleAllDescriptions}
-  className="px-6 py-2 rounded-lg font-semibold transition-all duration-200 bg-[#006c67] text-white hover:bg-[#09fbb7] hover:text-[#006c67]"
->
-  {showAllDetails ? "Hide Role Info" : "Show Role Info"}
-</button>
-
-
+                      onClick={toggleAllDescriptions}
+                      className="px-6 py-2 rounded-lg font-semibold transition-all duration-200 bg-[#006c67] text-white hover:bg-[#09fbb7] hover:text-[#006c67]"
+                    >
+                      {showAllDetails ? "Hide Role Info" : "Show Role Info"}
+                    </button>
 
                     <button
                       onClick={() => setIsModalOpen(false)}
@@ -304,16 +337,16 @@ useEffect(() => {
                       Cancel
                     </button>
                     <button
-  onClick={handleSubmit}
-  disabled={!isFormValid()}
-  className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
-    isFormValid()
-      ? 'bg-[#006c67] text-white hover:bg-[#09fbb7] hover:text-[#006c67]'
-      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-  }`}
->
-  Submit
-</button>
+                      onClick={handleSubmit}
+                      disabled={!isFormValid()}
+                      className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                        isFormValid()
+                          ? 'bg-[#006c67] text-white hover:bg-[#09fbb7] hover:text-[#006c67]'
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
+                    >
+                      Submit
+                    </button>
                   </div>
                 </>
               ) : (
@@ -322,6 +355,11 @@ useEffect(() => {
             </Dialog.Panel>
           </div>
         </Dialog>
+      </div>
+    </div>
+  )
+}
+
 
        
 {/*<div ref={animationRef}>
