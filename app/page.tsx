@@ -354,9 +354,8 @@ Message: ${message}`
           </div>
         </Dialog>
       </div>
-    </div>
-  )
-}
+   
+
 
 
        
@@ -607,6 +606,10 @@ Message: ${message}`
           </div>
         </section>
 
+     </div>
+)}
+
+
         {/* Footer */}
         <footer className="container mx-auto px-4 py-12 border-t border-gray-200/50">
           <div className="max-w-4xl mx-auto text-center">
@@ -629,6 +632,3 @@ Message: ${message}`
             <p className="text-gray-500 text-sm">© 2025 DirectDose. All rights reserved.</p>
           </div>
         </footer>
-
-
-        
