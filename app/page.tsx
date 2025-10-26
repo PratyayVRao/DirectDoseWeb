@@ -6,6 +6,22 @@ import Link from "next/link"
 import { createClient } from "@/utils/supabase/client"
 import { Dialog } from "@headlessui/react"
 
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <Script
+          src="https://widget.incitefulmed.com/incitefulmed-widget.js"
+          data-partner-id="direct-dose"
+          async
+          strategy="afterInteractive"
+        />
+      </head>
+      <body>{children}</body>
+    </html>
+  )
+}
+
 const encouragingMessages = [
   "Sweet calculations ahead!",
   "You're doing grape at managing your health!",
