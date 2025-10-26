@@ -2,25 +2,12 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import Script from "next/script"
 
 import { createClient } from "@/utils/supabase/client"
 import { Dialog } from "@headlessui/react"
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <Script
-          src="https://widget.incitefulmed.com/incitefulmed-widget.js"
-          data-partner-id="direct-dose"
-          async
-          strategy="afterInteractive"
-        />
-      </head>
-      <body>{children}</body>
-    </html>
-  )
-}
+
 
 const encouragingMessages = [
   "Sweet calculations ahead!",
@@ -257,6 +244,12 @@ Message: ${message}`
               </button>
             </div>
           </div>
+          <Script
+  src="https://widget.incitefulmed.com/incitefulmed-widget.js"
+  data-partner-id="direct-dose"
+  async
+  strategy="afterInteractive"
+/>
         </section>
 
         <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
