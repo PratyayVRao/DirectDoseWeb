@@ -22,6 +22,23 @@ const encouragingMessages = [
   "Olive your dedication to wellness!",
 ]
 
+const partners = [
+  { name: "T1International", img: "/images/T1IntLogo.png" },
+  { name: "FlittingHummingbird", img: "/images/FlittingHummingbirdLogo.png" },
+  { name: "ChronicallyMe", img: "/images/CMLogo.png" },
+  { name: "IncitefulMed", img: "/images/IncitefulMedLogo.png" },
+  { name: "New Trier Student Activities", img: "/images/NTLogo.png" },
+]
+
+const [currentIndex, setCurrentIndex] = useState(0)
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentIndex((prev) => (prev + 1) % partners.length)
+  }, 3000) // change every 3 seconds
+  return () => clearInterval(interval)
+}, [])
+
 
 const roles = [
   {
@@ -366,58 +383,34 @@ Message: ${message}`
    
 
 
-       {/* Partnerships Section */}
+      {/* Partnerships Carousel */}
 <section className="bg-gradient-to-br from-teal-50 to-emerald-50 py-16 px-8">
   <div className="max-w-7xl mx-auto">
     {/* Section Title */}
     <h2 className="text-4xl font-bold text-center mb-12">Partnerships & Sponsorships</h2>
 
-    {/* Top Row: 3 cards */}
-    <div className="flex justify-center gap-8 mb-8">
-      {[
-        { name: "T1International", img: "/images/T1IntLogo.png" },
-        { name: "FlittingHummingbird", img: "/images/FlittingHummingbirdLogo.png" },
-        { name: "ChronicallyMe", img: "/images/CMLogo.png" },
-      ].map((partner, i) => (
-        <div
-          key={i}
-          className="bg-white shadow-md rounded-xl p-6 flex flex-col items-center text-center w-64"
-        >
-          {/* Logo Image */}
-          <img
-            src={partner.img}
-            alt={`${partner.name} Logo`}
-            className="w-full h-32 mb-4 object-contain"
-          />
-          {/* Name */}
-          <h4 className="text-xl font-semibold">{partner.name}</h4>
-        </div>
-      ))}
-    </div>
-
-    {/* Bottom Row: 2 cards centered */}
-    <div className="flex justify-center gap-8">
-      {[
-        { name: "IncitefulMed", img: "/images/IncitefulMedLogo.png" },
-        { name: "New Trier Student Activities", img: "/images/NTLogo.png" },
-      ].map((partner, i) => (
-        <div
-          key={i}
-          className="bg-white shadow-md rounded-xl p-6 flex flex-col items-center text-center w-64"
-        >
-          {/* Logo Image */}
-          <img
-            src={partner.img}
-            alt={`${partner.name} Logo`}
-            className="w-full h-32 mb-4 object-contain"
-          />
-          {/* Name */}
-          <h4 className="text-xl font-semibold">{partner.name}</h4>
-        </div>
-      ))}
+    {/* Carousel */}
+    <div className="overflow-hidden">
+      <div className="flex gap-8 transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 272}px)` }}>
+        {partners.map((partner, i) => (
+          <div
+            key={i}
+            className="bg-white shadow-md rounded-xl p-6 flex flex-col items-center text-center w-64 flex-shrink-0"
+          >
+            <img
+              src={partner.img}
+              alt={`${partner.name} Logo`}
+              className="w-full h-32 mb-4 object-contain"
+            />
+            <h4 className="text-xl font-semibold">{partner.name}</h4>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>
+
+
 
 
 
