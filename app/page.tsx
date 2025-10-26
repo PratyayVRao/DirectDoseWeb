@@ -366,6 +366,36 @@ Message: ${message}`
    
 
 
+        {/* Partnerships Section */}
+        <section className="bg-gradient-to-br from-teal-50 to-emerald-50 py-16 px-8">
+  <div className="max-w-7xl mx-auto">
+    {/* Section Title */}
+    <h2 className="text-4xl font-bold text-center mb-12">Partnerships & Sponsorships</h2>
+
+    {/* Partnership Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[
+        { name: "T1International", img: "/images/T1IntLogo.png" },
+        { name: "FlittingHummingbird", img: "/images/FlittingHummingbirdLogo.png" },
+        { name: "ChronicallyMe", img: "/images/CMLogo.png" },
+        { name: "IncitefulMed", img: "/images/IncitefulMedLogo.png" },
+        { name: "New Trier Student Activities", img: "/images/NTLogo.png" },
+      ].map((partner, i) => (
+        <div key={i} className="bg-white shadow-md rounded-xl p-6 flex flex-col items-center text-center">
+          {/* Logo Image */}
+          <img
+            src={partner.img}
+            alt={`${partner.name} Logo`}
+            className="w-24 h-24 rounded-full mb-4 object-cover"
+          />
+          {/* Name */}
+          <h4 className="text-xl font-semibold">{partner.name}</h4>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
 
        
 
