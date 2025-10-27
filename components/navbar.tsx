@@ -7,12 +7,12 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Menu, X } from "lucide-react"
-import type { User } from "@supabase/supabase-js"  // <-- import User type
+import type { User } from "@supabase/supabase-js"  
 
 export function Navbar() {
   const pathname = usePathname()
 
-  // Specify user state type as User or null
+  
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,7 +24,7 @@ export function Navbar() {
         const {
           data: { user },
         } = await supabase.auth.getUser()
-        setUser(user) // OK now since user is typed as User | null
+        setUser(user) 
       } catch (error) {
         console.error("Error fetching user:", error)
       } finally {
@@ -34,9 +34,9 @@ export function Navbar() {
 
     getUser()
 
-    // Set up auth state change listener
+    
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null) // also OK
+      setUser(session?.user ?? null) 
     })
 
     return () => {
@@ -62,7 +62,7 @@ export function Navbar() {
   const authLinks = [
     { href: "/icr-calculator", label: "ICR Calculator" },
     { href: "/basal-calculator", label: "Basal Calculator" },
-    { href: "/foodmood", label: "FoodMood" },
+    { href: "/FoodMood-main", label: "FoodMood" },
   ]
 
   const aboutLink = { href: "/about", label: "About Us" }
