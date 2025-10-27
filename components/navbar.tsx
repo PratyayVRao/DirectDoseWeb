@@ -56,14 +56,13 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/calculator", label: "Calculator" },
-    { href: "/FoodMood-main", label: "FoodMood" },
   ]
 
   // Auth-related links (always show here)
   const authLinks = [
     { href: "/icr-calculator", label: "ICR Calculator" },
     { href: "/basal-calculator", label: "Basal Calculator" },
-    
+    { href: "/foodmood", label: "FoodMood" },
   ]
 
   const aboutLink = { href: "/about", label: "About Us" }
